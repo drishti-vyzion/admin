@@ -25,8 +25,6 @@ Route::middleware([TokenMiddleware::class, 'auth:sanctum'])->group(function () {
     Route::get('/items', [ItemController::class, 'index']);
     Route::get('/items/{id}', [ItemController::class, 'show']); // Show single item
    
-
-
     Route::middleware('role:user')->group(function (){
         
     Route::post('/likes', [LikeController::class, 'store']);
@@ -51,12 +49,7 @@ Route::middleware([TokenMiddleware::class, 'auth:sanctum'])->group(function () {
         Route::delete('/items/{id}', [ItemController::class, 'destroy']);
     });
 
-// Route::get('login/facebook', [SocialiteController::class, 'redirectToFacebook']);
-// Route::get('login/facebook/callback', [SocialiteController::class, 'handleFacebookCallback']);
-Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle']);
-Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+// Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('redirect');
+// Route::get('/auth/google/callback', [GoogleController::class, 'Callback'])->name('auth.google.callback');
 
-Route::get('/test', function () {
-    return response()->json(['message' => 'API is working']);
-});
 });
