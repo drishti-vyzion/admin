@@ -19,6 +19,7 @@ class ItemListResource extends JsonResource
            'name' => $this->name,
            'description' => $this->description,
            'category_id' => $this->category_id,
+           'item_varients' => $this->item_varients,
            'image' => $this->image,
            'created_at' => $this->created_at,
            'updated_at' => $this->updated_at,

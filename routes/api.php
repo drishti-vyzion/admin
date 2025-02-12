@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ItemVarientController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Middleware\TokenMiddleware;
@@ -25,6 +26,9 @@ Route::middleware([TokenMiddleware::class, 'auth:sanctum'])->group(function () {
     Route::get('/items', [ItemController::class, 'index']);
     Route::get('/items/{id}', [ItemController::class, 'show']); // Show single item
    
+    Route::get('/item/varients', [ItemVarientController::class, 'index']);
+    Route::post('/item/varients', [ItemVarientController::class, 'store']);
+
     Route::middleware('role:user')->group(function (){
         
     Route::post('/likes', [LikeController::class, 'store']);
@@ -51,5 +55,15 @@ Route::middleware([TokenMiddleware::class, 'auth:sanctum'])->group(function () {
 
 // Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('redirect');
 // Route::get('/auth/google/callback', [GoogleController::class, 'Callback'])->name('auth.google.callback');
+
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('redirect');
+Route::get('/auth/google/callback', [GoogleController::class, 'Callback'])->name('callback');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware('auth')->name('dashboard');
+Route::get('/', function () {
+    return view('home');
+});
+
 
 });

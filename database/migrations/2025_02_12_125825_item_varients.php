@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('items', function (Blueprint $table) {
-           $table->integer('price'); 
+        Schema::create('item_varients', function (Blueprint $table) {
+            $table->id();
+            $table->string('color');
+            $table->string('size');
+            $table->string('fabric');
+            $table->string('price');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('items', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('item_varients');
     }
 };

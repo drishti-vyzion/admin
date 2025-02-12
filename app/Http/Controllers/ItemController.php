@@ -16,18 +16,17 @@ class ItemController extends Controller
 {
 
     public function index()
-    { 
-        if(auth::user()->role === 'retailer') {
-          $item = Item::where('created_by', Auth::id())->get();
-    } else{
-        $item = item::all();
-    }
+    {
+        if (auth::user()->role === 'retailer') {
+            $item = Item::where('created_by', Auth::id())->get();
+        } else {
+            $item = item::all();
+        }
         return ItemListResource::collection($item);
-    
     }
     public function show($id)
     {
-      // $item = Item::where('id', $id)->first();
+        // $item = Item::where('id', $id)->first();
         $item = Item::where('id', $id)->where('created_by', Auth::id())->first();
         if (!$item) {
             return response()->json(['message' => 'Item not found or deleted'], 404);
@@ -40,6 +39,7 @@ class ItemController extends Controller
             'name' => 'required',
             'description' => 'required',
             'category_id' => 'required',
+            'item_varients' => 'required',
             'image' => 'required|image',
             'price' => 'required|numeric',
         ]);
@@ -51,9 +51,9 @@ class ItemController extends Controller
             'description' => $request->description,
             'category_id' => $request->category_id,
             'image' => $imagePath,
+            'item_varients' => $request->item_varients,
             'price' => $request->price,
         ]);
-
 
         return new ItemListResource($item);
     }

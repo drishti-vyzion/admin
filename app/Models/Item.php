@@ -13,7 +13,7 @@ class Item extends Model
     use HasFactory, HasApiTokens;
     protected $table = 'items';
     protected $primarykey = 'id';
-    protected $fillable = ['created_by', 'update_by', 'name', 'description', 'category_id', 'image', 'price'];
+    protected $fillable = ['created_by', 'update_by', 'name', 'description', 'category_id', 'image', 'item_varients'];
 
     public function user(): BelongsTo
     {
@@ -38,5 +38,9 @@ class Item extends Model
     public function Orderitem()
     {
         return $this->hasMany(OrderItem::class);
+    }
+    public function ItemVarient(): HasMany
+    {
+        return $this->hasMany(ItemVarient::class);
     }
 }

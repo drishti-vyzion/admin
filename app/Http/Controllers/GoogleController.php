@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Throwable;
+
 
 class GoogleController extends Controller
 {
@@ -16,26 +17,34 @@ class GoogleController extends Controller
         return Socialite::driver('google')->redirect('/auth/google/callback');
     }
     public function callback()
-    {
+    {  dd(123);
         try {
-            $user = Socialite::driver('google')->user();
-        } catch (Throwable $e) {
+            $googleUser = Socialite::driver('google')->user();
+            //  dd($googleUser);
+        } catch (Exception $e) {
             return redirect('/')->with('error', 'Google authentication failed.');
         }
-        $existingUser = User::where('email', $user->email)->first();
-
+        $existingUser = User::where('email', $googleUser->email)->first();
         if ($existingUser) {
+            $existingUser->update([
+                'google_id' => $googleUser->getId(),    
+                'avatar' => $googleUser->getAvatar(),
+                $existingUser->name = $googleUser->getName(),   
+                $existingUser->email_verified_at = now(),        
+                $existingUser->save(), 
+            ]);
             Auth::login($existingUser);
         } else {
-            $newUser = User::updateOrCreate([
-                'email' => $user->email
-            ], [
-                'name' => $user->name,
-                'password' => bcrypt(Str::random(16)),
-                'email_verified_at' => now()
+            $newUser = User::create([
+                'name' => $googleUser->getName(),
+                'email' => $googleUser->getEmail(),
+                'google_id' => $googleUser->id, 
+                'avatar' => $googleUser->avatar, 
+                'password' => bcrypt(Str::random(16)), 
+                'email_verified_at' => now(), 
             ]);
             Auth::login($newUser);
         }
-        return view('/dashboard');
+        return redirect()->route('dashboard');
     }
 }
