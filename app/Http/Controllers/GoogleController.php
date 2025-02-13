@@ -17,7 +17,7 @@ class GoogleController extends Controller
         return Socialite::driver('google')->redirect('/auth/google/callback');
     }
     public function callback()
-    {  dd(123);
+    {  
         try {
             $googleUser = Socialite::driver('google')->user();
             //  dd($googleUser);

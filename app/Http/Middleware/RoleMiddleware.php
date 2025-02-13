@@ -11,12 +11,11 @@ class RoleMiddleware
 {
         public function handle(Request $request, Closure $next, $role): Response
         {
-
-        if (!Auth::user() || Auth::user()->role !== $role) {
-            abort(403, 'Unauthorized action.');
+            if (!Auth::user() || Auth::user()->role !== $role) {
+                abort(403, 'Unauthorized action.');
+            }
+// dd($next($request));
+            return $next($request);
         }
-
-        return $next($request);
-    }
-    }
+}
 

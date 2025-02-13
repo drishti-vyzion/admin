@@ -10,12 +10,13 @@ class OrderMail extends Mailable
 {
    
     use Queueable, SerializesModels;
-    public $user, $order, $item;
-    public function __construct($user, $order, $item)
+    public $user, $order, $item, $address;
+    public function __construct($user, $order, $item, $address)
     {
         $this->user = $user;
         $this->order = $order;
         $this->item = $item;
+        $this->address = $address;
     }
     public function build()
     { 
@@ -23,7 +24,8 @@ class OrderMail extends Mailable
                     ->with([
                         'user' => $this->user,
                         'order' => $this->order ,
-                        'item' => $this->item 
+                        'item' => $this->item ,
+                          'address' => $this->address 
                     ]);
     }
 }

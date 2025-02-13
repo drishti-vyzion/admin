@@ -39,11 +39,12 @@ class ItemController extends Controller
             'name' => 'required',
             'description' => 'required',
             'category_id' => 'required',
-            'item_varients' => 'required',
+            'item_varient_id' => 'required',
             'image' => 'required|image',
             'price' => 'required|numeric',
         ]);
-        //dd($request);
+
+
         $imagePath = $request->file('image')->store('items', 'public');
         $item = Item::create([
             'created_by' => Auth::id(),
@@ -51,10 +52,10 @@ class ItemController extends Controller
             'description' => $request->description,
             'category_id' => $request->category_id,
             'image' => $imagePath,
-            'item_varients' => $request->item_varients,
+            'item_varient_id' => $request->item_varient_id,
             'price' => $request->price,
         ]);
-
+     
         return new ItemListResource($item);
     }
 

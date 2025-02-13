@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Mail\CardOrderMail;
 use App\Mail\OrderMail;
+use App\Models\Address;
 use App\Models\Card;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -19,6 +19,7 @@ class OrderController extends Controller
     {
         $request->validate(['item_id' => 'required|exists:items,id']);
         $item = Item::find($request->item_id);
+        $address = Address::find($request->address_id);
         $quantity = $request->quantity ?? 1;
         $totalPrice = $item->price * $quantity;
         $order = Order::create([
@@ -28,16 +29,19 @@ class OrderController extends Controller
         ]);
         OrderItem::create([
             'order_id' => $order->id,
+            'address_id' => $address->id,
             'item_id' => $item->id,
             'quantity' => $quantity,
             'price' => $item->price * $quantity,
         ]);
         $user = Auth::user();
-        Mail::to($user->email)->send(new OrderMail($user, $item, $order));
+         //dd(Mail::to($user->email));
+       // Mail::to($user->email)->send(new OrderMail($user, $item, $order, $address));
         return response()->json([
             'message' => 'Order created successfully',
             'order' => $order,
             'items' => $item,
+            'address' => $address
         ]);
     }
 

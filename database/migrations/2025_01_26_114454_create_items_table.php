@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
-                  $table->unsignedBigInteger('updated_by')->nullable(); // Adjust the position as needed
-        $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->unsignedBigInteger('updated_by')->nullable(); // Adjust the position as needed
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
             $table->text('description');
             $table->string('category_id')->constrained()->onDelete('cascade');

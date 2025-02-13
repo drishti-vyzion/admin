@@ -14,6 +14,7 @@
 <p>Your order has been successful!</p>
 <p>your product: {{ $item->name }}</p>
 <p>Text:{{ $item->description }}</p>
+<p>address : {{ $address->area }}</p>
 <p>Total price: {{ $order->total_price }}</p>
 <p>Thank you,</p>
 

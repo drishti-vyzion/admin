@@ -13,7 +13,7 @@ class Item extends Model
     use HasFactory, HasApiTokens;
     protected $table = 'items';
     protected $primarykey = 'id';
-    protected $fillable = ['created_by', 'update_by', 'name', 'description', 'category_id', 'image', 'item_varients'];
+    protected $fillable = ['created_by', 'update_by', 'name', 'description', 'category_id', 'image', 'item_varient_id'];
 
     public function user(): BelongsTo
     {
