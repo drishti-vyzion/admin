@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CardResource;
 use App\Models\Card;
 use App\Models\Item;
+use App\Models\ItemVarient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,6 +34,7 @@ class AddItermController extends Controller
             'item_id' => $request->item_id,
             'quantity' => $request->quantity,
         ]);
+        // $itemVarient = ItemVarient::find($request->price);
         $totalPrice = $item->price * $card->quantity;
         return response()->json([
             'data' => new CardResource($card),

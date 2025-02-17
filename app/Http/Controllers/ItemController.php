@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+use function Pest\Laravel\json;
+
 class ItemController extends Controller
 {
 
@@ -43,11 +45,13 @@ class ItemController extends Controller
             'image' => 'required|image',
             'price' => 'required|numeric',
         ]);
-
-
-        $imagePath = $request->file('image')->store('items', 'public');
+// if  (Auth::user()->role == 'retailer'){
+  
+// }
+$imagePath = $request->file('image')->store('items', 'public');
+// if ($request->created_by == 2){
         $item = Item::create([
-            'created_by' => Auth::id(),
+            'created_by' =>Auth::id(),
             'name' => $request->name,
             'description' => $request->description,
             'category_id' => $request->category_id,
@@ -55,7 +59,7 @@ class ItemController extends Controller
             'item_varient_id' => $request->item_varient_id,
             'price' => $request->price,
         ]);
-     
+    // }
         return new ItemListResource($item);
     }
 

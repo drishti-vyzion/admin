@@ -24,25 +24,26 @@ class AuthController extends Controller
             'password' => 'required',
             'role' => 'required|string',
         ]);
-
+        $User = User::where('email', $request->email)->first();
+        if($User){
+            return response()->json(['already register']); 
+        }
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
-
         $token = $user->createToken('authToken')->plainTextToken;
-   
-        Mail::to($user->email)->send(new RegistrationSuccessMail($user));
-        // dd((new RegistrationSuccessMail($user)));
+        //  dd( Mail::to($user->email));
+    //    Mail::to($user->email)->send(new RegistrationSuccessMail($user));
+ 
         return response()->json([
-            //  'message' => 'Registration successful. A confirmation email has been sent.',
             'token' => $token,
             'user' => new UserResource($user)
         ], 201);
+    
     }
-
     public function login(Request $request)
     {
         $request->validate([
@@ -73,7 +74,7 @@ class AuthController extends Controller
             return response()->json(['password' => 'same Password'], 400);
         }
         $user->update(['password' => Hash::make($request->new_password)]);
-        Mail::to($user->email)->send(new PasswordChangedMail($user));
+       // Mail::to($user->email)->send(new PasswordChangedMail($user));
         return response()->json(['message' => 'Password reset successful, email sent']);
     }
 
@@ -85,8 +86,12 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Auth::guard('sanctum')->user()->tokens()->delete();
+        $user = Auth::guard('sanctum')->user()->tokens();
 
+        if(!$user){
+            return response()->json([ 'already logout' ]);
+        }
+        $user->delete();
         return response()->json([
             'message' => 'Logout successful'
         ], 200);
