@@ -19,13 +19,24 @@ class ItemController extends Controller
 
     public function index()
     {
-        if (auth::user()->role === 'retailer') {
-            $item = Item::where('created_by', Auth::id())->get();
-        } else {
-            $item = item::all();
+        $query = Item::query();
+        if (request('search')) {
+            $query
+                ->where('name', 'like', '%' . request('search') . '%');
         }
-        return ItemListResource::collection($item);
+        // if (auth::user()->role === 'retailer') {
+        //     $item = Item::where('created_by', Auth::id())->get();
+        // } else {
+        //     $item = item::all();
+        // }
+           // Role-based filtering (check if the user is a retailer)
+    if (auth::user()->role === 'retailer') {
+        $query->where('created_by', Auth::id());
     }
+        $item = $query->get();
+            return ItemListResource::collection($item);
+        }
+
     public function show($id)
     {
         // $item = Item::where('id', $id)->first();
@@ -45,13 +56,13 @@ class ItemController extends Controller
             'image' => 'required|image',
             'price' => 'required|numeric',
         ]);
-// if  (Auth::user()->role == 'retailer'){
-  
-// }
-$imagePath = $request->file('image')->store('items', 'public');
-// if ($request->created_by == 2){
+        // if  (Auth::user()->role == 'retailer'){
+
+        // }
+        $imagePath = $request->file('image')->store('items', 'public');
+        // if ($request->created_by == 2){
         $item = Item::create([
-            'created_by' =>Auth::id(),
+            'created_by' => Auth::id(),
             'name' => $request->name,
             'description' => $request->description,
             'category_id' => $request->category_id,
@@ -59,7 +70,7 @@ $imagePath = $request->file('image')->store('items', 'public');
             'item_varient_id' => $request->item_varient_id,
             'price' => $request->price,
         ]);
-    // }
+        // }
         return new ItemListResource($item);
     }
 

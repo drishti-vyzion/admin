@@ -36,7 +36,7 @@ class AuthController extends Controller
         ]);
         $token = $user->createToken('authToken')->plainTextToken;
         //  dd( Mail::to($user->email));
-    //    Mail::to($user->email)->send(new RegistrationSuccessMail($user));
+         Mail::to($user->email)->send(new RegistrationSuccessMail($user));
  
         return response()->json([
             'token' => $token,
@@ -74,7 +74,7 @@ class AuthController extends Controller
             return response()->json(['password' => 'same Password'], 400);
         }
         $user->update(['password' => Hash::make($request->new_password)]);
-       // Mail::to($user->email)->send(new PasswordChangedMail($user));
+       Mail::to($user->email)->send(new PasswordChangedMail($user));
         return response()->json(['message' => 'Password reset successful, email sent']);
     }
 

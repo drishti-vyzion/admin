@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']); //  No Middleware
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-
+Route::post('/item', [ItemController::class, 'title']);
 Route::post('/addresses', [AddressControllers::class, 'store']);
 // Route::post('/wishlist/add',[AddItermController::class,'add_to_wishlist']);
 

@@ -7,6 +7,7 @@ use App\Mail\OrderMail;
 use App\Models\Address;
 use App\Models\Card;
 use App\Models\Item;
+use App\Models\ItemVarient;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
@@ -21,11 +22,14 @@ class OrderController extends Controller
         $item = Item::find($request->item_id);
         $address = Address::find($request->address_id);
         $quantity = $request->quantity ?? 1;
-        $totalPrice = $item->price * $quantity;
+        $item_varient = ItemVarient::find($request->item_varient_id);
+        //    $item_varient = $item->item_varient_id;
+        //   dd($item_varient->price);
+        $totalPrice = $item_varient->price * $quantity;
         $order = Order::create([
             'user_id' => Auth::id(),
             'total_price' => $totalPrice,
-            'status' => 'pending',
+            'status' => 'pending'
         ]);
         OrderItem::create([
             'order_id' => $order->id,
@@ -35,8 +39,8 @@ class OrderController extends Controller
             'price' => $item->price * $quantity,
         ]);
         $user = Auth::user();
-         //dd(Mail::to($user->email));
-       // Mail::to($user->email)->send(new OrderMail($user, $item, $order, $address));
+       // dd(new OrderMail($user, $item, $order, $address));
+         Mail::to($user->email)->send(new OrderMail($user, $item, $order, $address));
         return response()->json([
             'message' => 'Order created successfully',
             'order' => $order,
@@ -65,13 +69,16 @@ class OrderController extends Controller
                 'price' => $totalPrice
             ]);
         }
+     
+        $cards->each(fn($card) => $card->forceDelete());
         $user = Auth::user();
-        Mail::to($user->email)->send(new CardOrderMail($user, $order));
+         Mail::to($user->email)->send(new CardOrderMail($user, $order));
         return response()->json([
             'message' => 'Order created successfully',
             'order' => $order,
             'items' => $cards->map(fn($card) => $card),
         ]);
+        //    $cards->forceDelete();
     }
 
     public function store(Request $request)

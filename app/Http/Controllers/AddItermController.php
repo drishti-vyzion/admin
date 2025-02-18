@@ -28,14 +28,15 @@ class AddItermController extends Controller
         if (!$item) {
             return response()->json(['error' => 'Item not found'], 404);
         }
+     
         $cards = Card::where('user_id', Auth::id())->with('item')->get();
         $card = Card::create([
             'user_id' => Auth::id(),
             'item_id' => $request->item_id,
             'quantity' => $request->quantity,
         ]);
-        // $itemVarient = ItemVarient::find($request->price);
-        $totalPrice = $item->price * $card->quantity;
+     $item_varient = ItemVarient::find($request->item_varient_id);
+        $totalPrice = $item_varient->price * $card->quantity;
         return response()->json([
             'data' => new CardResource($card),
             'total_price' => $totalPrice
